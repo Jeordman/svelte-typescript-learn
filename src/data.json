@@ -1,0 +1,22 @@
+{
+  "meetups": [
+    {
+      "id": "1121",
+      "title": "Testing the title",
+      "subtitle": "subtitle",
+      "description": "a test of this arr",
+      "imageUrl": "fail",
+      "address": "1234 bridle farms rd",
+      "email": "test@mail.com"
+    },
+    {
+      "id": "1124",
+      "title": "2",
+      "subtitle": "2nd subtitle",
+      "description": "a test of this 2nd thing",
+      "imageUrl": "fail",
+      "address": "not a real place",
+      "email": "test2@mail.com"
+    }
+  ]
+}
