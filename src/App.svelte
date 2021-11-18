@@ -5,7 +5,7 @@
 
   import MeetupGrid from "./Meeting/MeetupGrid.svelte";
   import TextInput from "./UI/TextInput.svelte";
-  import Button from "./Meeting/Button.svelte";
+  import Button from "./UI/Button.svelte";
 
   import { getRandImage } from "./services/fetch";
   import { populateStartupDataWithImages } from "./services/init";
@@ -22,13 +22,12 @@
     emailTxt = "";
 
   async function addNewThing() {
-    const imageUrl = await getRandImage();
     const newMeetup = {
       id: Math.random().toString(),
       title: titleTxt,
       subtitle: subtitleTxt,
       description: descriptionTxt,
-      imageUrl: imageUrl,
+      imageUrl: await getRandImage(),
       address: addressTxt,
       email: emailTxt,
     };
@@ -82,7 +81,13 @@
 </main>
 
 <style>
+  main {
+    margin-top: 5rem;
+  }
+
   form {
-    margin-top: 100px;
+    width: 30rem;
+    max-width: 90%;
+    margin: auto;
   }
 </style>
