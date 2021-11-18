@@ -1,12 +1,14 @@
 <script lang="ts">
   import Header from "./UI/Header.svelte";
-  import MeetupGrid from "./Meeting/MeetupGrid.svelte";
-  import * as AppData from "./data.json";
-  import { getRandImage } from "./services/fetch";
-  import { populateStartupDataWithImages } from "./services/init";
   import { onMount } from "svelte";
+  import * as AppData from "./data.json";
+
+  import MeetupGrid from "./Meeting/MeetupGrid.svelte";
   import TextInput from "./UI/TextInput.svelte";
   import Button from "./Meeting/Button.svelte";
+
+  import { getRandImage } from "./services/fetch";
+  import { populateStartupDataWithImages } from "./services/init";
 
   let meetups = [];
   onMount(async () => {
