@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Header from "./UI/Header.svelte";
   import { onMount } from "svelte";
+  import Header from "./UI/Header.svelte";
   import * as AppData from "./data.json";
 
   import MeetupGrid from "./Meeting/MeetupGrid.svelte";
@@ -19,7 +19,8 @@
     subtitleTxt = "",
     descriptionTxt = "",
     addressTxt = "",
-    emailTxt = "";
+    emailTxt = "",
+    isFavorite = false;
 
   async function addNewThing() {
     const newMeetup = {
@@ -33,6 +34,17 @@
     };
 
     meetups = [...meetups, newMeetup];
+  }
+
+  function toggleFavorite(event) {
+    const id = event.detail;
+    const meetupsCopy = [...meetups]
+    meetups = meetupsCopy.map((m) => {
+      if (m.id === id) {
+        m.isFavorite = !m.isFavorite;
+      }
+      return m;
+    })
   }
 </script>
 
@@ -77,7 +89,7 @@
     />
     <Button type="submit" caption="Save" />
   </form>
-  <MeetupGrid {meetups} />
+  <MeetupGrid {meetups} on:togglefavorite={toggleFavorite} />
 </main>
 
 <style>
