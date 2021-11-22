@@ -18,10 +18,10 @@
   let editMode = null;
 
   async function addNewMeetup(event) {
-    console.log('here')
+    console.log("here");
     const { titleTxt, subtitleTxt, descriptionTxt, addressTxt, emailTxt } =
       event.detail;
-      console.log( titleTxt, subtitleTxt, descriptionTxt, addressTxt, emailTxt )
+    console.log(titleTxt, subtitleTxt, descriptionTxt, addressTxt, emailTxt);
     const newMeetup = {
       id: Math.random().toString(),
       title: titleTxt,
@@ -46,15 +46,19 @@
       return m;
     });
   }
+
+  function cancelEdit() {
+    editMode = null;
+  }
 </script>
 
 <Header />
 <main>
   <div class="meetup-controls">
-    <Button caption="NEW MEETUP" on:click={() => (editMode = "add")} />
+    <Button on:click={() => (editMode = "add")}>NEW MEETUP</Button>
   </div>
   {#if editMode === "add"}
-    <EditMeetup on:save={addNewMeetup} />
+    <EditMeetup on:save={addNewMeetup} on:cancel={cancelEdit} />
   {/if}
   <MeetupGrid {meetups} on:togglefavorite={toggleFavorite} />
 </main>

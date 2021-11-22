@@ -20,9 +20,8 @@
     <section>
       {title}
       {#if isFav}
-      <Badge>FAVORITE</Badge>
+        <Badge>FAVORITE</Badge>
       {/if}
-    
     </section>
     <section>{subtitle}</section>
     <p>{address}</p>
@@ -35,15 +34,16 @@
     <p />
   </div>
   <footer>
-    <Button href="mailto:{email}" caption="Contact" />
+    <Button href="mailto:{email}">Contact</Button>
     <Button
       mode="outline"
       type="button"
       color={isFav ? null : "success"}
-      caption={isFav ? "Unfavorite" : "Favorite"}
       on:click={() => dispatch("togglefavorite", id)}
-    />
-    <Button mode="outline" type="button" caption="Show details" />
+    >
+      {isFav ? "Unfavorite" : "Favorite"}
+    </Button>
+    <Button mode="outline" type="button">Show details</Button>
   </footer>
 </article>
 
