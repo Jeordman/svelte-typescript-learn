@@ -18,10 +18,8 @@
   let editMode = null;
 
   async function addNewMeetup(event) {
-    console.log("here");
     const { titleTxt, subtitleTxt, descriptionTxt, addressTxt, emailTxt } =
       event.detail;
-    console.log(titleTxt, subtitleTxt, descriptionTxt, addressTxt, emailTxt);
     const newMeetup = {
       id: Math.random().toString(),
       title: titleTxt,
