@@ -3,26 +3,25 @@
   import Header from "./UI/Header.svelte";
   import * as AppData from "./data.json";
 
+  import EditMeetup from "./Meeting/EditMeetup.svelte";
   import MeetupGrid from "./Meeting/MeetupGrid.svelte";
-  import TextInput from "./UI/TextInput.svelte";
-  import Button from "./UI/Button.svelte";
 
   import { getRandImage } from "./services/fetch";
   import { populateStartupDataWithImages } from "./services/init";
+  import Button from "./UI/Button.svelte";
 
   let meetups = [];
   onMount(async () => {
     meetups = (await populateStartupDataWithImages(AppData.meetups)) as any;
   });
 
-  let titleTxt = "",
-    subtitleTxt = "",
-    descriptionTxt = "",
-    addressTxt = "",
-    emailTxt = "",
-    isFavorite = false;
+  let editMode = null;
 
-  async function addNewThing() {
+  async function addNewMeetup(event) {
+    console.log('here')
+    const { titleTxt, subtitleTxt, descriptionTxt, addressTxt, emailTxt } =
+      event.detail;
+      console.log( titleTxt, subtitleTxt, descriptionTxt, addressTxt, emailTxt )
     const newMeetup = {
       id: Math.random().toString(),
       title: titleTxt,
@@ -34,61 +33,29 @@
     };
 
     meetups = [...meetups, newMeetup];
+    editMode = null;
   }
 
   function toggleFavorite(event) {
     const id = event.detail;
-    const meetupsCopy = [...meetups]
+    const meetupsCopy = [...meetups];
     meetups = meetupsCopy.map((m) => {
       if (m.id === id) {
         m.isFavorite = !m.isFavorite;
       }
       return m;
-    })
+    });
   }
 </script>
 
+<Header />
 <main>
-  <Header />
-  <form on:submit|preventDefault={addNewThing}>
-    <!-- on:input={(event) => (<HTMLInputElement>titleTxt = event.target.value)} -->
-    <TextInput
-      controlType=""
-      rows=""
-      id="title"
-      label="Title"
-      value={titleTxt}
-    />
-    <TextInput
-      controlType=""
-      rows=""
-      id="subtitle"
-      label="subtitle"
-      value={subtitleTxt}
-    />
-    <TextInput
-      controlType=""
-      rows=""
-      id="description"
-      label="description"
-      value={descriptionTxt}
-    />
-    <TextInput
-      controlType=""
-      rows=""
-      id="address"
-      label="address"
-      value={addressTxt}
-    />
-    <TextInput
-      controlType=""
-      rows=""
-      id="email"
-      label="email"
-      value={emailTxt}
-    />
-    <Button type="submit" caption="Save" />
-  </form>
+  <div class="meetup-controls">
+    <Button caption="NEW MEETUP" on:click={() => (editMode = "add")} />
+  </div>
+  {#if editMode === "add"}
+    <EditMeetup on:save={addNewMeetup} />
+  {/if}
   <MeetupGrid {meetups} on:togglefavorite={toggleFavorite} />
 </main>
 
@@ -96,10 +63,7 @@
   main {
     margin-top: 5rem;
   }
-
-  form {
-    width: 30rem;
-    max-width: 90%;
-    margin: auto;
+  .meetup-controls {
+    margin: 1rem;
   }
 </style>

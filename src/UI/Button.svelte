@@ -3,12 +3,13 @@
   export let href: any = null;
   export let type = null;
   export let mode = null;
+  export let color = null;
 </script>
 
 {#if href}
   <a {href}>{caption}</a>
 {:else}
-  <button class={mode} {type} on:click>{caption}</button>
+  <button class={mode} {type} {color} on:click>{caption}</button>
 {/if}
 
 <style>
