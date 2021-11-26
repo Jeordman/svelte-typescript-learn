@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {createEventDispatcher} from "svelte";
+  import { createEventDispatcher } from "svelte";
   import meetupStore from "./meetup-store";
   import Badge from "../UI/Badge.svelte";
   import Button from "../UI/Button.svelte";
@@ -13,11 +13,11 @@
   export let email;
   export let isFav;
 
-  function toggleFavorite(id) {
+  function toggleFavorite() {
     meetupStore.toggleFavorite(id);
   }
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 </script>
 
 <article>
@@ -39,7 +39,9 @@
     <p />
   </div>
   <footer>
-    <Button href="mailto:{email}">Contact</Button>
+    <Button mode="outline" type="button" on:click={() => dispatch("edit", id)}
+      >Edit</Button
+    >
     <Button
       mode="outline"
       type="button"
@@ -48,7 +50,11 @@
     >
       {isFav ? "Unfavorite" : "Favorite"}
     </Button>
-    <Button mode="outline" type="button" on:click={() => dispatch('showdetails', id)}>Show details</Button>
+    <Button
+      mode="outline"
+      type="button"
+      on:click={() => dispatch("showdetails", id)}>Show details</Button
+    >
   </footer>
 </article>
 

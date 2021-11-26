@@ -7,11 +7,26 @@
   import { isEmpty, isValidEmail } from "../helpers/validation";
   import { getRandImage } from "../services/fetch";
 
+  export let id = null;
+
   let titleTxt = "",
     subtitleTxt = "",
     descriptionTxt = "",
     addressTxt = "",
     emailTxt = "";
+
+  if (id) {
+    const unsub = meetupStore.subscribe((meetups) => {
+      const selectedMeetup = meetups.find((meetup) => meetup.id === id);
+      const { title, subtitle, description, address, email } = selectedMeetup;
+      titleTxt = title;
+      (subtitleTxt = subtitle),
+        (descriptionTxt = description),
+        (addressTxt = address),
+        (emailTxt = email);
+    });
+    unsub();
+  }
 
   const dispatch = createEventDispatcher();
 
@@ -30,8 +45,7 @@
 
   async function submitForm() {
     dispatch("save");
-
-    meetupStore.addNewMeetup({
+    const meetupData = {
       id: Math.random().toString(),
       title: titleTxt,
       subtitle: subtitleTxt,
@@ -39,12 +53,22 @@
       imageUrl: await getRandImage(),
       address: addressTxt,
       email: emailTxt,
-    });
-    editMode = null;
+    };
+
+    if (id) {
+      meetupStore.updateMeetup(id, meetupData);
+    } else {
+      meetupStore.addNewMeetup(meetupData);
+    }
   }
 
   function cancel() {
     dispatch("cancel");
+  }
+
+  function deleteMeetup() {
+    meetupStore.deleteMeetup(id);
+    dispatch("save");
   }
 </script>
 
@@ -106,6 +130,7 @@
     <Button type="button" on:click={submitForm} disabled={!formValid}
       >Save</Button
     >
+    <Button type="button" on:click={deleteMeetup}>Delete</Button>
   </div>
 </Modal>
 
