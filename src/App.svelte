@@ -1,4 +1,5 @@
 <script lang="ts">
+  import meetupStore from "./Meeting/meetup-store";
   import { onMount } from "svelte";
   import Header from "./UI/Header.svelte";
   import * as AppData from "./data.json";
@@ -10,9 +11,8 @@
   import { populateStartupDataWithImages } from "./services/init";
   import Button from "./UI/Button.svelte";
 
-  let meetups = [];
   onMount(async () => {
-    meetups = (await populateStartupDataWithImages(AppData.meetups)) as any;
+    meetupStore.init(await populateStartupDataWithImages(AppData.meetups));
   });
 
   let editMode = null;
@@ -20,7 +20,8 @@
   async function addNewMeetup(event) {
     const { titleTxt, subtitleTxt, descriptionTxt, addressTxt, emailTxt } =
       event.detail;
-    const newMeetup = {
+
+    meetupStore.addNewMeetup({
       id: Math.random().toString(),
       title: titleTxt,
       subtitle: subtitleTxt,
@@ -28,21 +29,14 @@
       imageUrl: await getRandImage(),
       address: addressTxt,
       email: emailTxt,
-    };
-
-    meetups = [...meetups, newMeetup];
+    });
     editMode = null;
   }
 
+  $: console.log($meetupStore, "store");
+
   function toggleFavorite(event) {
-    const id = event.detail;
-    const meetupsCopy = [...meetups];
-    meetups = meetupsCopy.map((m) => {
-      if (m.id === id) {
-        m.isFavorite = !m.isFavorite;
-      }
-      return m;
-    });
+    meetupStore.toggleFavorite(event.detail);
   }
 
   function cancelEdit() {
@@ -58,7 +52,7 @@
   {#if editMode === "add"}
     <EditMeetup on:save={addNewMeetup} on:cancel={cancelEdit} />
   {/if}
-  <MeetupGrid {meetups} on:togglefavorite={toggleFavorite} />
+  <MeetupGrid meetups={$meetupStore} on:togglefavorite={toggleFavorite} />
 </main>
 
 <style>

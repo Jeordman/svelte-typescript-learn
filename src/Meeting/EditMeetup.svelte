@@ -3,6 +3,7 @@
   import TextInput from "../UI/TextInput.svelte";
   import Button from "../UI/Button.svelte";
   import Modal from "../UI/Modal.svelte";
+  import { isEmpty, isValidEmail } from "../helpers/validation";
 
   let titleTxt = "",
     subtitleTxt = "",
@@ -11,6 +12,19 @@
     emailTxt = "";
 
   const dispatch = createEventDispatcher();
+
+  // validity watchers
+  $: titleValid = !isEmpty(titleTxt);
+  $: subtitleValid = !isEmpty(subtitleTxt);
+  $: descriptionValid = !isEmpty(descriptionTxt);
+  $: addressValid = !isEmpty(addressTxt);
+  $: emailValid = isValidEmail(emailTxt);
+  $: formValid =
+    titleValid &&
+    subtitleValid &&
+    descriptionValid &&
+    addressValid &&
+    emailValid;
 
   function submitForm() {
     dispatch("save", {
@@ -35,45 +49,52 @@
       rows=""
       id="title"
       label="Title"
-      value={titleTxt}
-      on:input={(e) => (titleTxt = e.target.value)}
+      valid={titleValid}
+      validityMessage="Please enter valid title"
+      bind:value={titleTxt}
     />
     <TextInput
       controlType=""
       rows=""
       id="subtitle"
       label="subtitle"
-      value={subtitleTxt}
-      on:input={(e) => (subtitleTxt = e.target.value)}
+      valid={subtitleValid}
+      validityMessage="Please enter valid subtitle"
+      bind:value={subtitleTxt}
     />
     <TextInput
       controlType=""
       rows=""
       id="description"
       label="description"
-      value={descriptionTxt}
-      on:input={(e) => (descriptionTxt = e.target.value)}
+      valid={descriptionValid}
+      validityMessage="Please enter valid description"
+      bind:value={descriptionTxt}
     />
     <TextInput
       controlType=""
       rows=""
       id="address"
       label="address"
-      value={addressTxt}
-      on:input={(e) => (addressTxt = e.target.value)}
+      valid={addressValid}
+      validityMessage="Please enter valid address"
+      bind:value={addressTxt}
     />
     <TextInput
       controlType=""
       rows=""
       id="email"
       label="email"
-      value={emailTxt}
-      on:input={(e) => (emailTxt = e.target.value)}
+      valid={emailValid}
+      validityMessage="Please enter valid email"
+      bind:value={emailTxt}
     />
   </form>
   <div slot="footer">
     <Button type="button" mode="outline" on:click={cancel}>Cancel</Button>
-    <Button type="button" on:click={submitForm}>Save</Button>
+    <Button type="button" on:click={submitForm} disabled={!formValid}
+      >Save</Button
+    >
   </div>
 </Modal>
 
