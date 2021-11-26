@@ -17,26 +17,10 @@
 
   let editMode = null;
 
-  async function addNewMeetup(event) {
-    const { titleTxt, subtitleTxt, descriptionTxt, addressTxt, emailTxt } =
-      event.detail;
-
-    meetupStore.addNewMeetup({
-      id: Math.random().toString(),
-      title: titleTxt,
-      subtitle: subtitleTxt,
-      description: descriptionTxt,
-      imageUrl: await getRandImage(),
-      address: addressTxt,
-      email: emailTxt,
-    });
-    editMode = null;
-  }
-
   $: console.log($meetupStore, "store");
 
-  function toggleFavorite(event) {
-    meetupStore.toggleFavorite(event.detail);
+  function endEditMode() {
+    editMode = null;
   }
 
   function cancelEdit() {
@@ -50,9 +34,9 @@
     <Button on:click={() => (editMode = "add")}>NEW MEETUP</Button>
   </div>
   {#if editMode === "add"}
-    <EditMeetup on:save={addNewMeetup} on:cancel={cancelEdit} />
+    <EditMeetup on:save={endEditMode} on:cancel={cancelEdit} />
   {/if}
-  <MeetupGrid meetups={$meetupStore} on:togglefavorite={toggleFavorite} />
+  <MeetupGrid meetups={$meetupStore} />
 </main>
 
 <style>

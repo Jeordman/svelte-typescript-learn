@@ -1,9 +1,11 @@
 <script>
+  import meetupStore from "./meetup-store";
   import { createEventDispatcher } from "svelte";
   import TextInput from "../UI/TextInput.svelte";
   import Button from "../UI/Button.svelte";
   import Modal from "../UI/Modal.svelte";
   import { isEmpty, isValidEmail } from "../helpers/validation";
+  import { getRandImage } from "../services/fetch";
 
   let titleTxt = "",
     subtitleTxt = "",
@@ -26,14 +28,19 @@
     addressValid &&
     emailValid;
 
-  function submitForm() {
-    dispatch("save", {
-      titleTxt,
-      subtitleTxt,
-      descriptionTxt,
-      addressTxt,
-      emailTxt,
+  async function submitForm() {
+    dispatch("save");
+
+    meetupStore.addNewMeetup({
+      id: Math.random().toString(),
+      title: titleTxt,
+      subtitle: subtitleTxt,
+      description: descriptionTxt,
+      imageUrl: await getRandImage(),
+      address: addressTxt,
+      email: emailTxt,
     });
+    editMode = null;
   }
 
   function cancel() {
@@ -51,7 +58,8 @@
       label="Title"
       valid={titleValid}
       validityMessage="Please enter valid title"
-      bind:value={titleTxt}
+      value={titleTxt}
+      on:input={(event) => (titleTxt = event.target.value)}
     />
     <TextInput
       controlType=""
@@ -60,16 +68,8 @@
       label="subtitle"
       valid={subtitleValid}
       validityMessage="Please enter valid subtitle"
-      bind:value={subtitleTxt}
-    />
-    <TextInput
-      controlType=""
-      rows=""
-      id="description"
-      label="description"
-      valid={descriptionValid}
-      validityMessage="Please enter valid description"
-      bind:value={descriptionTxt}
+      value={subtitleTxt}
+      on:input={(event) => (subtitleTxt = event.target.value)}
     />
     <TextInput
       controlType=""
@@ -78,7 +78,8 @@
       label="address"
       valid={addressValid}
       validityMessage="Please enter valid address"
-      bind:value={addressTxt}
+      value={addressTxt}
+      on:input={(event) => (addressTxt = event.target.value)}
     />
     <TextInput
       controlType=""
@@ -87,7 +88,17 @@
       label="email"
       valid={emailValid}
       validityMessage="Please enter valid email"
-      bind:value={emailTxt}
+      value={emailTxt}
+      on:input={(event) => (emailTxt = event.target.value)}
+    />
+    <TextInput
+      controlType="textarea"
+      rows=""
+      id="description"
+      label="description"
+      valid={descriptionValid}
+      validityMessage="Please enter valid description"
+      bind:value={descriptionTxt}
     />
   </form>
   <div slot="footer">
