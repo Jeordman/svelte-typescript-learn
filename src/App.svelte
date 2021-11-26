@@ -7,15 +7,19 @@
   import EditMeetup from "./Meeting/EditMeetup.svelte";
   import MeetupGrid from "./Meeting/MeetupGrid.svelte";
 
-  import { getRandImage } from "./services/fetch";
   import { populateStartupDataWithImages } from "./services/init";
   import Button from "./UI/Button.svelte";
+  import MeetupDetail from "./Meeting/MeetupDetail.svelte";
 
   onMount(async () => {
     meetupStore.init(await populateStartupDataWithImages(AppData.meetups));
   });
 
   let editMode = null;
+  let page = "overview";
+  let pageData = {
+    id: null,
+  };
 
   $: console.log($meetupStore, "store");
 
@@ -26,17 +30,31 @@
   function cancelEdit() {
     editMode = null;
   }
+
+  function showdetails(event) {
+    page = "details";
+    pageData.id = event.detail;
+  }
+
+  function closeDetails() {
+    page = "overview";
+    pageData = { id: null };
+  }
 </script>
 
 <Header />
 <main>
-  <div class="meetup-controls">
-    <Button on:click={() => (editMode = "add")}>NEW MEETUP</Button>
-  </div>
-  {#if editMode === "add"}
-    <EditMeetup on:save={endEditMode} on:cancel={cancelEdit} />
+  {#if page === "overview"}
+    <div class="meetup-controls">
+      <Button on:click={() => (editMode = "add")}>NEW MEETUP</Button>
+    </div>
+    {#if editMode === "add"}
+      <EditMeetup on:save={endEditMode} on:cancel={cancelEdit} />
+    {/if}
+    <MeetupGrid meetups={$meetupStore} on:showdetails={showdetails} />
+  {:else}
+    <MeetupDetail id={pageData.id} on:close={closeDetails} />
   {/if}
-  <MeetupGrid meetups={$meetupStore} />
 </main>
 
 <style>
